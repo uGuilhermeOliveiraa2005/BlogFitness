@@ -1,0 +1,532 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import { getCollection } from 'astro:content';
+import { formatDate } from '../utils/formatDate';
+import { CATEGORIES, SITE } from '../utils/constants';
+import { getSlug } from '../utils/slug';
+
+// Carregar posts publicados ordenados por data decrescente
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Artigo de destaque (ou o mais recente)
+const featuredPost = sortedPosts.find(p => p.data.featured) || sortedPosts[0];
+const recentPosts = sortedPosts.filter(p => p.id !== featuredPost?.id);
+
+// Carregar ferramentas
+const tools = await getCollection('tools');
+const sortedTools = tools.sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="Vida & Peso | Emagrecimento Saudável, Nutrição e Hábitos Sustentáveis"
+  description="Conteúdo sério, sem sensacionalismo e fundamentado em evidências para emagrecimento consciente, déficit calórico seguro e ferramentas de cálculo gratuitas."
+>
+  <!-- Hero Editorial Sóbrio -->
+  <section class="hero-section">
+    <div class="container hero-container">
+      <div class="hero-content">
+        <span class="hero-badge">Ciência & Prática Editorial</span>
+        <h1 class="hero-title">Emagrecimento Consciente Sem Mitos e Sem Efeito Sanfona</h1>
+        <p class="hero-description">
+          Aprenda a criar um déficit calórico seguro, manter sua musculatura e adotar hábitos duradouros através de artigos fundamentados em literatura científica e ferramentas gratuitas de apoio.
+        </p>
+        <div class="hero-actions">
+          <a href="/ferramentas/calculadora-calorias" class="btn btn-primary">Calcular Suas Calorias (TDEE)</a>
+          <a href="/blog" class="btn btn-secondary">Explorar Artigos</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seção de Ferramentas / Calculadoras Rápidas -->
+  <section class="tools-showcase">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Apoio Prático</span>
+        <h2 class="section-title">Calculadoras Gratuitas Baseadas em Ciência</h2>
+        <p class="section-subtitle">Utilize nossas ferramentas para obter estimativas individuais confiáveis para o seu planejamento.</p>
+      </div>
+
+      <div class="tools-grid">
+        {sortedTools.map((tool) => (
+          <a href={`/ferramentas/${getSlug(tool.id)}`} class="tool-card">
+            <span class="tool-icon" aria-hidden="true">{tool.data.icon}</span>
+            <h3 class="tool-title">{tool.data.title}</h3>
+            <p class="tool-desc">{tool.data.description}</p>
+            <span class="tool-action-link">Usar Calculadora &rarr;</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Bloco de Anúncio Discreto -->
+  <div class="container">
+    <AdSlot slotId="1122334455" format="horizontal" label="Publicidade" />
+  </div>
+
+  <!-- Artigo em Destaque Principal -->
+  {featuredPost && (
+    <section class="featured-post-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Leitura Fundamental</span>
+          <h2 class="section-title">Guia em Destaque</h2>
+        </div>
+
+        <div class="featured-card">
+          <div class="featured-image-col">
+            <a href={`/blog/${getSlug(featuredPost.id)}`}>
+              <img 
+                src={featuredPost.data.heroImage} 
+                alt={featuredPost.data.heroImageAlt || featuredPost.data.title} 
+                class="featured-img"
+                loading="eager"
+              />
+            </a>
+          </div>
+          <div class="featured-body-col">
+            <a href={`/categoria/${featuredPost.data.category}`} class="category-badge">
+              {CATEGORIES[featuredPost.data.category]?.label || featuredPost.data.category}
+            </a>
+            <h3 class="featured-title">
+              <a href={`/blog/${getSlug(featuredPost.id)}`}>{featuredPost.data.title}</a>
+            </h3>
+            <p class="featured-excerpt">{featuredPost.data.description}</p>
+            <div class="card-meta">
+              <time datetime={featuredPost.data.pubDate.toISOString()}>
+                {formatDate(featuredPost.data.pubDate)}
+              </time>
+              <span>· ~{featuredPost.data.readingTime} min de leitura</span>
+            </div>
+            <a href={`/blog/${getSlug(featuredPost.id)}`} class="btn btn-secondary featured-read-btn">
+              Ler Artigo Completo &rarr;
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Artigos Recentes -->
+  <section class="recent-articles-section">
+    <div class="container">
+      <div class="section-header-flex">
+        <div>
+          <span class="section-tag">Atualizações</span>
+          <h2 class="section-title">Últimas Publicações</h2>
+        </div>
+        <a href="/blog" class="all-posts-link">Ver todos os artigos &rarr;</a>
+      </div>
+
+      <div class="posts-grid">
+        {recentPosts.map((post) => (
+          <article class="post-card">
+            <a href={`/blog/${getSlug(post.id)}`} class="post-card-thumb">
+              <img 
+                src={post.data.heroImage} 
+                alt={post.data.heroImageAlt || post.data.title} 
+                class="thumb-img"
+                loading="lazy" 
+              />
+            </a>
+            <div class="post-card-content">
+              <a href={`/categoria/${post.data.category}`} class="category-badge">
+                {CATEGORIES[post.data.category]?.label || post.data.category}
+              </a>
+              <h3 class="post-card-title">
+                <a href={`/blog/${getSlug(post.id)}`}>{post.data.title}</a>
+              </h3>
+              <p class="post-card-desc">{post.data.description}</p>
+              <div class="card-meta">
+                <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+                <span>· ~{post.data.readingTime} min</span>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Padrão Editorial E-E-A-T (Sobre a Equipe e Princípios) -->
+  <section class="trust-section">
+    <div class="container">
+      <div class="trust-box">
+        <div class="trust-content">
+          <span class="trust-badge">Compromisso E-E-A-T</span>
+          <h2 class="trust-title">Por que Nossas Informações São Confiáveis?</h2>
+          <p class="trust-text">
+            O nicho de emagrecimento está repleto de promessas irresponsáveis e dietas da moda perigosas. No <strong>Vida & Peso</strong>, todas as recomendações são alinhadas com consensos da Associação Brasileira para o Estudo da Obesidade (ABESO), Sociedade Internacional de Nutrição Esportiva (ISSN) e OMS.
+          </p>
+          <div class="trust-points">
+            <div class="trust-point">
+              <strong>Sem Promessas Milagrosas</strong>
+              <p>Não vendemos atalhos. Respeitamos o ritmo biológico do organismo humano.</p>
+            </div>
+            <div class="trust-point">
+              <strong>Fórmulas Validadas</strong>
+              <p>Nossas calculadoras utilizam equações científicas reais (Mifflin-St Jeor e OMS).</p>
+            </div>
+            <div class="trust-point">
+              <strong>Transparência Ética</strong>
+              <p>Indicações de produtos são independentes e devidamente sinalizadas.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .hero-section {
+    background-color: #f5f6f3;
+    border-bottom: 1px solid var(--color-border);
+    padding: 4.5rem 0;
+  }
+
+  .hero-container {
+    max-width: 820px;
+    text-align: center;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-primary);
+    background-color: var(--color-primary-soft);
+    padding: 0.3rem 0.8rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    line-height: 1.15;
+    margin-bottom: 1.25rem;
+    color: var(--color-primary);
+  }
+
+  .hero-description {
+    font-size: 1.15rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* Seções Comuns */
+  .section-header {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 2.5rem auto;
+  }
+
+  .section-tag {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    color: var(--color-primary-light);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .section-title {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-subtitle {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  /* Ferramentas */
+  .tools-showcase {
+    padding: 4rem 0 2rem 0;
+  }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .tool-card {
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1.75rem;
+    text-decoration: none;
+    transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tool-card:hover {
+    border-color: var(--color-primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+    text-decoration: none;
+  }
+
+  .tool-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .tool-title {
+    font-family: var(--font-sans);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .tool-desc {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+    flex-grow: 1;
+  }
+
+  .tool-action-link {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  /* Post em Destaque */
+  .featured-post-section {
+    padding: 3rem 0;
+  }
+
+  .featured-card {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  }
+
+  .featured-image-col {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .featured-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    min-height: 320px;
+    transition: transform var(--transition-normal);
+  }
+
+  .featured-card:hover .featured-img {
+    transform: scale(1.02);
+  }
+
+  .featured-body-col {
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .featured-title {
+    font-size: 1.6rem;
+    margin: 0.75rem 0;
+    line-height: 1.3;
+  }
+
+  .featured-title a {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .featured-title a:hover {
+    text-decoration: underline;
+  }
+
+  .featured-excerpt {
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+  }
+
+  .featured-read-btn {
+    align-self: flex-start;
+    margin-top: 1rem;
+  }
+
+  /* Artigos Recentes */
+  .recent-articles-section {
+    padding: 3.5rem 0;
+  }
+
+  .section-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+  }
+
+  .all-posts-link {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-primary-light);
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .post-card {
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .post-card-thumb {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background-color: var(--color-surface-soft);
+  }
+
+  .thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-normal);
+  }
+
+  .post-card:hover .thumb-img {
+    transform: scale(1.03);
+  }
+
+  .post-card-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .post-card-title {
+    font-size: 1.25rem;
+    margin: 0.6rem 0;
+    line-height: 1.35;
+  }
+
+  .post-card-title a {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .post-card-title a:hover {
+    text-decoration: underline;
+  }
+
+  .post-card-desc {
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+    flex-grow: 1;
+  }
+
+  .card-meta {
+    font-size: 0.8rem;
+    color: var(--color-text-light);
+  }
+
+  /* Confiança E-E-A-T */
+  .trust-section {
+    padding: 2rem 0 5rem 0;
+  }
+
+  .trust-box {
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 3rem 2.5rem;
+  }
+
+  .trust-badge {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-primary-light);
+  }
+
+  .trust-title {
+    font-size: 1.8rem;
+    margin-top: 0.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .trust-text {
+    font-size: 1.05rem;
+    color: var(--color-text-muted);
+    max-width: 800px;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .trust-points {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .trust-point strong {
+    display: block;
+    color: var(--color-primary);
+    font-size: 0.95rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .trust-point p {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  @media (max-width: 800px) {
+    .featured-card {
+      grid-template-columns: 1fr;
+    }
+    .featured-body-col {
+      padding: 1.5rem;
+    }
+  }
+</style>

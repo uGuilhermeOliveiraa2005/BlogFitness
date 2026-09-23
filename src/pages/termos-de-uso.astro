@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { SITE } from '../utils/constants';
+
+const breadcrumbs = [
+  { name: 'Termos de Uso', url: '/termos-de-uso' }
+];
+---
+
+<BaseLayout
+  title="Termos de Uso & Isenção de Responsabilidade Médica"
+  description="Termos e condições de uso do portal Vida & Peso, incluindo aviso legal de isenção de responsabilidade médica e proteção de propriedade intelectual."
+>
+  <div class="institutional-page container-narrow">
+    <header class="page-header">
+      <Breadcrumbs items={breadcrumbs} />
+      <h1 class="page-title">Termos de Uso & Aviso Legal</h1>
+      <p class="page-lead">
+        Ao acessar e utilizar o portal <strong>{SITE.name}</strong>, você expressa sua plena concordância com os termos e condições descritos neste documento.
+      </p>
+    </header>
+
+    <div class="prose">
+      <p><em>Vigência a partir de: 15 de janeiro de 2025.</em></p>
+
+      <div class="health-disclaimer">
+        <strong>AVISO MÉDICO IMPORTANTE:</strong> O conteúdo deste site é estritamente informativo e educacional. Não constitui aconselhamento médico, diagnóstico ou plano terapêutico. O emagrecimento envolve variáveis clínicas complexas. Consulte um médico ou nutricionista antes de alterar sua rotina de treinos ou padrão alimentar.
+      </div>
+
+      <h2>1. Finalidade do Site e Isenção Clínica</h2>
+      <p>
+        O <strong>{SITE.name}</strong> disponibiliza artigos explicativos e calculadoras automatizadas com o objetivo de disseminar conhecimentos científicos consolidados de nutrição e fisiologia.
+      </p>
+      <p>
+        Nenhuma postagem, comentário ou resultado gerado por nossas ferramentas interativas (IMC, TDEE ou Proteína) deve ser interpretado como consulta ou orientação profissional individualizada. O usuário assume total responsabilidade pelo uso que fizer das informações divulgadas.
+      </p>
+
+      <h2>2. Propriedade Intelectual</h2>
+      <p>
+        Todos os textos, estruturas de dados, calculadoras e elementos gráficos autorais deste site são protegidos pelas leis de direitos autorais (Lei nº 9.610/1998). É permitida a citação de pequenos trechos para fins de estudo ou menção crítica, desde que acompanhada do devido crédito com link hipertextual ativo para a fonte original. É expressamente proibida a cópia integral ou reprodução comercial não autorizada de nossos conteúdos.
+      </p>
+
+      <h2>3. Limitações de Responsabilidade das Ferramentas</h2>
+      <p>
+        Nossas calculadoras executam modelos matemáticos consagrados (como a equação de Mifflin-St Jeor para taxa metabólica). No entanto, o gasto calórico e a composição corporal real podem variar devido a aspectos genéticos, hormonais, histórico de saúde e massa muscular. Não garantimos perda de peso específica em períodos determinados.
+      </p>
+
+      <h2>4. Links Externos e Relação de Afiliados</h2>
+      <p>
+        Este site pode conter hiperlinks para sites, ferramentas e lojas externas. Não exercemos controle sobre as práticas, produtos ou políticas de privacidade de terceiros. A aquisição de produtos via links patrocinados é feita sob a exclusiva responsabilidade do usuário junto à empresa vendedora.
+      </p>
+
+      <h2>5. Modificações dos Termos</h2>
+      <p>
+        Reservamo-nos o direito de revisar e atualizar estes termos a qualquer momento, visando atender a exigências regulatórias ou melhorias técnicas. O uso continuado do site após tais atualizações implica a concordância tácita com os novos termos.
+      </p>
+
+      <h2>6. Foro Aplicável</h2>
+      <p>
+        Estes termos são regidos pelas leis da República Federativa do Brasil. Fica eleito o Foro da Comarca da capital de domicílio da administração editorial para dirimir eventuais controvérsias decorrentes deste documento.
+      </p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .institutional-page {
+    padding-top: 2.5rem;
+    padding-bottom: 5rem;
+  }
+
+  .page-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .page-title {
+    margin-top: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .page-lead {
+    font-size: 1.15rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+</style>

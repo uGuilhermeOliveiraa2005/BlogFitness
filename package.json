@@ -1,0 +1,18 @@
+{
+  "name": "blogfitness",
+  "version": "1.0.0",
+  "description": "Blog de saúde e emagrecimento 100% estático com Astro e Cloudflare Pages",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^5.0.0",
+    "sharp": "^0.35.4"
+  }
+}

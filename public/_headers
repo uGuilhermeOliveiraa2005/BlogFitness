@@ -1,0 +1,36 @@
+# ==============================================================================
+# Cabeçalhos de Segurança e Cache da Cloudflare Pages
+# Padrão Empresarial de Segurança e Otimização Core Web Vitals
+# ==============================================================================
+
+# Regras Globais para todas as rotas
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=(), payment=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://ep2.adtrafficquality.google https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data:; img-src 'self' data: https: blob:; connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://api.github.com; frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; object-src 'none'; base-uri 'self';
+  X-XSS-Protection: 1; mode=block
+
+# Cache Agressivo e Imutável para Assets Compilados (JS/CSS/Imagens)
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Favicon e arquivos estáticos da raiz
+/favicon.svg
+  Cache-Control: public, max-age=86400
+
+/robots.txt
+  Cache-Control: public, max-age=86400
+
+/sitemap-index.xml
+  Cache-Control: public, max-age=86400
+
+# Rota administrativa Decap CMS
+/admin/*
+  X-Frame-Options: SAMEORIGIN
+  Cache-Control: no-cache, no-store, must-revalidate

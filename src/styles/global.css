@@ -1,0 +1,264 @@
+/* ==========================================================================
+   Blog de Emagrecimento & Saúde - Design System Editorial & Minimalista
+   Paleta: Neutros suaves, verdes botânicos, tipografia editorial de alta legibilidade
+   ========================================================================== */
+
+:root {
+  /* Cores Base */
+  --color-bg: #fafaf8;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f4f5f2;
+  --color-border: #e3e6e1;
+  --color-border-subtle: #edf0ec;
+  
+  /* Tipografia & Contraste */
+  --color-text-main: #191f1c;
+  --color-text-muted: #565e58;
+  --color-text-light: #7c857e;
+  
+  /* Tons de Destaque Editorial */
+  --color-primary: #1b4332;
+  --color-primary-light: #2d6a4f;
+  --color-primary-soft: #e8f0eb;
+  --color-accent: #a35332; /* Terracota discreto para CTAs/botões */
+  --color-accent-hover: #894225;
+  
+  /* Status & Mensagens */
+  --color-success: #2d6a4f;
+  --color-warning: #9a6b10;
+  --color-danger: #a43a3a;
+  --color-info-bg: #f0f4f2;
+
+  /* Tipografia */
+  --font-serif: "Newsreader", "Charter", "Bitstream Charter", "Sitka Text", "Cambria", Georgia, serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Espaçamentos e Layout */
+  --max-w-content: 740px;
+  --max-w-page: 1160px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Transições suaves e discretas */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+}
+
+/* Reset Moderno e Acessível */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text-main);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+img, picture, svg, video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+input, button, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+a {
+  color: var(--color-primary-light);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+/* Headings Editoriais */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  color: var(--color-primary);
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: clamp(2rem, 4vw, 2.75rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin-top: 2rem; margin-bottom: 0.75rem; }
+h3 { font-size: clamp(1.2rem, 2.5vw, 1.45rem); margin-top: 1.5rem; margin-bottom: 0.5rem; }
+
+p {
+  margin-bottom: 1.25rem;
+  color: var(--color-text-main);
+}
+
+/* Utilidades de Grid & Layout */
+.container {
+  width: 100%;
+  max-width: var(--max-w-page);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.container-narrow {
+  width: 100%;
+  max-width: var(--max-w-content);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+/* Botões Sórbios e Acessíveis */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  min-height: 44px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  color: #ffffff !important;
+  border: 1px solid var(--color-accent);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-hover);
+  text-decoration: none;
+}
+
+.btn-secondary {
+  background-color: var(--color-surface);
+  color: var(--color-primary) !important;
+  border: 1px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-surface-soft);
+  text-decoration: none;
+}
+
+/* Estilo do Conteúdo do Artigo (Prose) */
+.prose {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #242926;
+}
+
+.prose p {
+  margin-bottom: 1.4rem;
+}
+
+.prose h2, .prose h3 {
+  scroll-margin-top: 5rem;
+}
+
+.prose ul, .prose ol {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.prose li {
+  margin-bottom: 0.5rem;
+}
+
+.prose blockquote {
+  border-left: 4px solid var(--color-primary-light);
+  padding: 0.75rem 1.25rem;
+  margin: 1.75rem 0;
+  background-color: var(--color-surface-soft);
+  font-style: italic;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.prose strong {
+  color: #111413;
+  font-weight: 600;
+}
+
+/* Disclaimers Médicos */
+.health-disclaimer {
+  background-color: #f7f9f7;
+  border-left: 3px solid var(--color-primary);
+  padding: 0.9rem 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  margin: 1.5rem 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.health-disclaimer strong {
+  color: var(--color-primary);
+}
+
+/* Badge de Categoria */
+.category-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+}
+
+.category-badge:hover {
+  text-decoration: none;
+  background-color: #d7e5dc;
+}
+
+/* Acessibilidade: Skip Link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-primary);
+  color: white;
+  padding: 8px 16px;
+  z-index: 1000;
+  transition: top 0.2s;
+}
+
+.skip-link:focus {
+  top: 0;
+}

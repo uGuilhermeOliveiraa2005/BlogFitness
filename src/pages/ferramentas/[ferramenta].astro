@@ -1,0 +1,186 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import BmiCalculator from '../../components/Calculators/BmiCalculator.astro';
+import CalorieCalculator from '../../components/Calculators/CalorieCalculator.astro';
+import ProteinCalculator from '../../components/Calculators/ProteinCalculator.astro';
+import { getCollection, render } from 'astro:content';
+import { generateBreadcrumbSchema } from '../../utils/seo';
+
+export async function getStaticPaths() {
+  const tools = await getCollection('tools');
+  return tools.map((tool) => {
+    const cleanSlug = tool.id.replace(/\.[^/.]+$/, '');
+    return {
+      params: { ferramenta: cleanSlug },
+      props: { tool, cleanSlug }
+    };
+  });
+}
+
+const { tool, cleanSlug } = Astro.props;
+const { Content } = await render(tool);
+
+const breadcrumbItems = [
+  { name: 'Ferramentas', url: '/ferramentas' },
+  { name: tool.data.title, url: `/ferramentas/${cleanSlug}` }
+];
+
+const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbItems);
+---
+
+<BaseLayout
+  title={tool.data.title}
+  description={tool.data.description}
+  schema={breadcrumbSchema}
+>
+  <div class="tool-single-page container-narrow">
+    <header class="tool-page-header">
+      <Breadcrumbs items={breadcrumbItems} />
+      <span class="tool-icon-badge" aria-hidden="true">{tool.data.icon}</span>
+      <h1 class="tool-heading">{tool.data.title}</h1>
+      <p class="tool-lead">{tool.data.description}</p>
+    </header>
+
+    <!-- Componente Interativo Isolado (Astro Island) -->
+    <div class="calculator-island-wrapper">
+      {tool.data.calculatorType === 'imc' && <BmiCalculator />}
+      {tool.data.calculatorType === 'calorias' && <CalorieCalculator />}
+      {tool.data.calculatorType === 'proteina' && <ProteinCalculator />}
+    </div>
+
+    <!-- Bloco de Conteúdo Explicativo / Científico da Ferramenta -->
+    <div class="prose tool-documentation">
+      <Content />
+    </div>
+
+    <!-- Anúncio Discreto Pós-Ferramenta -->
+    <AdSlot slotId="4455667788" format="auto" label="Publicidade" />
+
+    <!-- Navegação para outras ferramentas -->
+    <div class="more-tools-section">
+      <h3 class="more-tools-title">Outras Ferramentas Recomendadas</h3>
+      <div class="more-tools-links">
+        {tool.data.calculatorType !== 'calorias' && (
+          <a href="/ferramentas/calculadora-calorias" class="more-tool-link">
+            <span>🔥</span>
+            <div>
+              <strong>Calculadora de Calorias (TDEE)</strong>
+              <small>Estime seu gasto metabólico e meta de déficit</small>
+            </div>
+          </a>
+        )}
+        {tool.data.calculatorType !== 'imc' && (
+          <a href="/ferramentas/calculadora-imc" class="more-tool-link">
+            <span>⚖️</span>
+            <div>
+              <strong>Calculadora de IMC</strong>
+              <small>Classificação de massa corporal segundo a OMS</small>
+            </div>
+          </a>
+        )}
+        {tool.data.calculatorType !== 'proteina' && (
+          <a href="/ferramentas/calculadora-proteina" class="more-tool-link">
+            <span>🥩</span>
+            <div>
+              <strong>Calculadora de Proteína</strong>
+              <small>Calcule a ingestão diária por quilo de peso</small>
+            </div>
+          </a>
+        )}
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .tool-single-page {
+    padding-top: 2.5rem;
+    padding-bottom: 5rem;
+  }
+
+  .tool-page-header {
+    margin-bottom: 2rem;
+  }
+
+  .tool-icon-badge {
+    font-size: 2.5rem;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+
+  .tool-heading {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    line-height: 1.25;
+  }
+
+  .tool-lead {
+    font-size: 1.15rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .calculator-island-wrapper {
+    margin-bottom: 3rem;
+  }
+
+  .tool-documentation {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .more-tools-section {
+    margin-top: 3.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .more-tools-title {
+    font-size: 1.2rem;
+    margin-bottom: 1.25rem;
+    color: var(--color-primary);
+  }
+
+  .more-tools-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+
+  .more-tool-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    text-decoration: none;
+    transition: border-color var(--transition-fast);
+  }
+
+  .more-tool-link:hover {
+    border-color: var(--color-primary-light);
+    text-decoration: none;
+  }
+
+  .more-tool-link span {
+    font-size: 1.5rem;
+  }
+
+  .more-tool-link strong {
+    display: block;
+    color: var(--color-primary);
+    font-size: 0.95rem;
+  }
+
+  .more-tool-link small {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+  }
+</style>

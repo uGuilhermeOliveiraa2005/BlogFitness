@@ -1,0 +1,130 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import CookieConsent from '../components/CookieConsent.astro';
+import { SITE } from '../utils/constants';
+import { generateWebSiteSchema, generateOrganizationSchema } from '../utils/seo';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonicalUrl?: string;
+  noindex?: boolean;
+  type?: 'website' | 'article';
+  schema?: Record<string, unknown> | Array<Record<string, unknown>>;
+}
+
+const {
+  title = SITE.title,
+  description = SITE.description,
+  image = SITE.defaultImage,
+  canonicalUrl = Astro.url.href,
+  noindex = false,
+  type = 'website',
+  schema
+} = Astro.props;
+
+const pageTitle = title === SITE.name ? title : `${title} | ${SITE.name}`;
+const ogImage = image.startsWith('http') ? image : `${SITE.url}${image}`;
+const websiteSchema = generateWebSiteSchema();
+const orgSchema = generateOrganizationSchema();
+
+const schemasToRender = [
+  websiteSchema,
+  orgSchema,
+  ...(schema ? (Array.isArray(schema) ? schema : [schema]) : [])
+].filter(Boolean);
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {!noindex && <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />}
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content="pt_BR" />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Favicon & PWA Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content={SITE.themeColor} />
+
+    <!-- Google Consent Mode v2 Default Settings (executado antes de qualquer tag) -->
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      
+      // Default: Negado até o usuário interagir com o banner
+      gtag('consent', 'default', {
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'analytics_storage': 'denied',
+        'wait_for_update': 500
+      });
+    </script>
+
+    <!-- Google Tag (gtag.js) para GA4 - Carregamento Assíncrono Não Bloqueante -->
+    {SITE.gaId && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${SITE.gaId}`}></script>
+        <script is:inline define:vars={{ gaId: SITE.gaId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', gaId, {
+            send_page_view: true,
+            anonymize_ip: true
+          });
+        </script>
+      </>
+    )}
+
+    <!-- Google AdSense - Assíncrono com ID configurado -->
+    {SITE.adsenseId && (
+      <script 
+        async 
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${SITE.adsenseId}`}
+        crossorigin="anonymous"
+      ></script>
+    )}
+
+    <!-- Dados Estruturados Schema.org (JSON-LD) -->
+    {schemasToRender.map((s) => (
+      <script type="application/ld+json" set:html={JSON.stringify(s)} />
+    ))}
+  </head>
+  <body>
+    <a href="#conteudo-principal" class="skip-link">Pular para o conteúdo principal</a>
+    
+    <Header currentPath={Astro.url.pathname} />
+    
+    <main id="conteudo-principal">
+      <slot />
+    </main>
+
+    <Footer />
+    <CookieConsent />
+  </body>
+</html>

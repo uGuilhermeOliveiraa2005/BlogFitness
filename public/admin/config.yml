@@ -1,0 +1,78 @@
+backend:
+  name: github
+  repo: seu-usuario/BlogFitness # Substitua pelo seu usuário/repositório no GitHub
+  branch: main
+  base_url: https://blogfitness.pages.dev # Ou backend de autenticação OAuth gratuito
+  auth_endpoint: auth
+
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+locale: pt_BR
+
+collections:
+  - name: posts
+    label: Artigos do Blog
+    label_singular: Artigo
+    folder: src/content/posts
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Título do Artigo", name: "title", widget: "string" }
+      - { label: "Descrição Curta (SEO Meta Description)", name: "description", widget: "string" }
+      - { label: "Data de Publicação", name: "pubDate", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ssZ", date_format: "DD/MM/YYYY", time_format: "HH:mm" }
+      - { label: "Data de Atualização", name: "updatedDate", widget: "datetime", required: false, format: "YYYY-MM-DDTHH:mm:ssZ" }
+      - label: "Categoria"
+        name: "category"
+        widget: "select"
+        options:
+          - { label: "Alimentação Saudável", value: "alimentacao" }
+          - { label: "Exercícios & Treinos", value: "exercicios" }
+          - { label: "Hábitos & Rotina", value: "habitos" }
+          - { label: "Emagrecimento Consciente", value: "emagrecimento-saudavel" }
+          - { label: "Mentalidade & Motivação", value: "motivacao" }
+      - { label: "Tags", name: "tags", widget: "list", default: ["emagrecimento", "saude"] }
+      - { label: "Imagem de Capa (Hero)", name: "heroImage", widget: "image" }
+      - { label: "Texto Alternativo da Imagem (Alt)", name: "heroImageAlt", widget: "string" }
+      - { label: "Autor (Nome ou ID)", name: "author", widget: "string", default: "mariana-silva" }
+      - { label: "Tempo de Leitura (minutos)", name: "readingTime", widget: "number", default: 6, value_type: "int" }
+      - { label: "Artigo em Destaque?", name: "featured", widget: "boolean", default: false }
+      - { label: "Palavra-chave Foco (SEO)", name: "focusKeyword", widget: "string", required: false }
+      - { label: "Rascunho?", name: "draft", widget: "boolean", default: false }
+      - label: "Produtos Afiliados Recomendados"
+        name: "affiliateProducts"
+        widget: "list"
+        required: false
+        fields:
+          - { label: "Nome do Produto", name: "nome", widget: "string" }
+          - { label: "Link de Afiliado (URL)", name: "url", widget: "string" }
+          - { label: "Imagem do Produto", name: "imagem", widget: "image", required: false }
+          - { label: "Descrição Curta", name: "descricaoCurta", widget: "string" }
+          - { label: "Texto do Botão", name: "botaoTexto", widget: "string", default: "Ver Oferta Oficial" }
+      - { label: "Conteúdo do Artigo (Markdown)", name: "body", widget: "markdown" }
+
+  - name: authors
+    label: Autores & Especialistas
+    folder: src/content/authors
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Nome Completo", name: "name", widget: "string" }
+      - { label: "Cargo / Especialidade", name: "role", widget: "string" }
+      - { label: "Biografia", name: "bio", widget: "text" }
+      - { label: "Foto de Perfil (Avatar)", name: "avatar", widget: "image" }
+      - { label: "Credenciais Profissionais (CRN / CRM / CREF)", name: "credentials", widget: "string" }
+
+  - name: tools
+    label: Ferramentas Interativas
+    folder: src/content/tools
+    create: false
+    fields:
+      - { label: "Título da Ferramenta", name: "title", widget: "string" }
+      - { label: "Descrição", name: "description", widget: "string" }
+      - { label: "Ícone", name: "icon", widget: "string" }
+      - { label: "Ordem de Exibição", name: "order", widget: "number", value_type: "int" }
+      - label: "Tipo de Calculadora"
+        name: "calculatorType"
+        widget: "select"
+        options: ["imc", "calorias", "proteina"]

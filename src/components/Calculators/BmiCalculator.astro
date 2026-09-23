@@ -1,0 +1,497 @@
+---
+// Calculadora de IMC (Índice de Massa Corporal) - Padrão OMS com Gauge Visual e CTA Contextual
+---
+
+<div class="calculator-card" id="bmi-calculator">
+  <div class="calculator-header">
+    <div class="calc-badge">Ferramenta Gratuita</div>
+    <h2 class="calc-title">Calculadora de Índice de Massa Corporal (IMC)</h2>
+    <p class="calc-subtitle">
+      Descubra se o seu peso atual está dentro da faixa considerada saudável pela Organização Mundial da Saúde (OMS).
+    </p>
+  </div>
+
+  <form id="bmi-form" class="calc-form" novalidate>
+    <div class="calc-grid">
+      <div class="form-group">
+        <label for="bmi-weight" class="form-label">Seu Peso (kg)</label>
+        <div class="input-wrapper">
+          <input 
+            type="number" 
+            id="bmi-weight" 
+            name="weight" 
+            min="20" 
+            max="300" 
+            step="0.1" 
+            placeholder="Ex: 72.5" 
+            required 
+            class="form-input"
+          />
+          <span class="input-unit">kg</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="bmi-height" class="form-label">Sua Altura (cm)</label>
+        <div class="input-wrapper">
+          <input 
+            type="number" 
+            id="bmi-height" 
+            name="height" 
+            min="80" 
+            max="250" 
+            step="1" 
+            placeholder="Ex: 175" 
+            required 
+            class="form-input"
+          />
+          <span class="input-unit">cm</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="calc-buttons">
+      <button type="submit" class="btn btn-primary btn-calc">Calcular Meu IMC</button>
+      <button type="reset" id="bmi-reset" class="btn btn-secondary btn-reset">Limpar</button>
+    </div>
+  </form>
+
+  <!-- Painel de Resultados (Oculto inicialmente) -->
+  <div id="bmi-result-panel" class="result-panel" style="display: none;" aria-live="polite">
+    <div class="result-summary">
+      <div class="result-score-box">
+        <span class="result-label">Seu IMC Calculado</span>
+        <span id="bmi-value-display" class="result-big-value">--</span>
+        <span id="bmi-class-display" class="result-status-badge">Normal</span>
+      </div>
+
+      <!-- Barra Visual Gauge com Marcadores de Faixa -->
+      <div class="gauge-container">
+        <div class="gauge-bar">
+          <div class="gauge-segment seg-under" title="Abaixo do peso (&lt; 18.5)"></div>
+          <div class="gauge-segment seg-normal" title="Normal (18.5 - 24.9)"></div>
+          <div class="gauge-segment seg-over" title="Sobrepeso (25 - 29.9)"></div>
+          <div class="gauge-segment seg-obese1" title="Obesidade Grau I (30 - 34.9)"></div>
+          <div class="gauge-segment seg-obese2" title="Obesidade Grau II/III (&gt;= 35)"></div>
+          <div id="gauge-marker" class="gauge-indicator" style="left: 0%;"></div>
+        </div>
+        <div class="gauge-labels">
+          <span>&lt; 18.5</span>
+          <span>18.5–24.9</span>
+          <span>25–29.9</span>
+          <span>30–34.9</span>
+          <span>&ge; 35</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-explanation">
+      <h3 id="bmi-advice-title" class="advice-title">O que este resultado significa?</h3>
+      <p id="bmi-advice-text" class="advice-text">
+        Seu IMC está na faixa ideal. Manter hábitos equilibrados de alimentação e atividade física regular é a melhor estratégia para sua longevidade.
+      </p>
+    </div>
+
+    <!-- CTA Contextual Baseado no Resultado -->
+    <div id="bmi-contextual-cta" class="contextual-cta">
+      <div class="cta-inner-box">
+        <div class="cta-text">
+          <strong id="bmi-cta-headline">Deseja calcular seu gasto calórico real?</strong>
+          <p id="bmi-cta-sub">
+            O IMC não diferencia gordura de músculo. Combine este dado com sua taxa metabólica para um plano seguro.
+          </p>
+        </div>
+        <a id="bmi-cta-link" href="/ferramentas/calculadora-calorias" class="btn btn-primary btn-sm">
+          Acessar Calculadora de Calorias
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="health-disclaimer">
+    <strong>Importante:</strong> O IMC é uma métrica populacional estabelecida pela OMS e não distingue massa muscular de tecido adiposo. Pessoas muito musculosas, idosos, gestantes ou crianças devem buscar avaliação clínica individual com bioimpedância ou dobras cutâneas.
+  </div>
+</div>
+
+<style>
+  .calculator-card {
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    margin: 2rem 0;
+  }
+
+  .calc-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-primary);
+    background-color: var(--color-primary-soft);
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.5rem;
+  }
+
+  .calc-title {
+    font-size: 1.6rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--color-primary);
+  }
+
+  .calc-subtitle {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .calc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .form-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+  }
+
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 0.75rem 2.5rem 0.75rem 0.9rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 1.05rem;
+    background-color: #fafbf9;
+    color: var(--color-text-main);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--color-primary-light);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.15);
+  }
+
+  .input-unit {
+    position: absolute;
+    right: 0.9rem;
+    font-size: 0.85rem;
+    color: var(--color-text-light);
+    pointer-events: none;
+    font-weight: 500;
+  }
+
+  .calc-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .btn-calc {
+    flex: 2;
+  }
+
+  .btn-reset {
+    flex: 1;
+  }
+
+  /* Painel de Resultados */
+  .result-panel {
+    margin-top: 2.25rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .result-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    background-color: var(--color-surface-soft);
+    padding: 1.75rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+  }
+
+  .result-score-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .result-label {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-light);
+    margin-bottom: 0.25rem;
+  }
+
+  .result-big-value {
+    font-family: var(--font-serif);
+    font-size: 3.2rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-primary);
+  }
+
+  .result-status-badge {
+    display: inline-block;
+    padding: 0.35rem 0.9rem;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-top: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Gauge */
+  .gauge-container {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .gauge-bar {
+    position: relative;
+    display: flex;
+    height: 14px;
+    border-radius: 7px;
+    overflow: visible;
+    background-color: #e5e7eb;
+    margin-bottom: 0.5rem;
+  }
+
+  .gauge-segment {
+    height: 100%;
+  }
+
+  .seg-under { width: 18.5%; background-color: #64b5f6; border-radius: 7px 0 0 7px; }
+  .seg-normal { width: 25%; background-color: #81c784; }
+  .seg-over { width: 20%; background-color: #ffb74d; }
+  .seg-obese1 { width: 18.5%; background-color: #ff8a65; }
+  .seg-obese2 { width: 18%; background-color: #e57373; border-radius: 0 7px 7px 0; }
+
+  .gauge-indicator {
+    position: absolute;
+    top: -5px;
+    width: 8px;
+    height: 24px;
+    background-color: #1a1a1a;
+    border: 2px solid #ffffff;
+    border-radius: 4px;
+    transform: translateX(-50%);
+    transition: left 0.4s ease-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .gauge-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: var(--color-text-light);
+  }
+
+  .result-explanation {
+    margin-bottom: 1.5rem;
+  }
+
+  .advice-title {
+    font-size: 1.15rem;
+    margin-bottom: 0.4rem;
+    color: var(--color-primary);
+  }
+
+  .advice-text {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* CTA Contextual */
+  .contextual-cta {
+    background-color: #f7faf8;
+    border: 1px solid #d5e5db;
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-inner-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+  }
+
+  .cta-text strong {
+    display: block;
+    color: var(--color-primary);
+    font-size: 0.98rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .cta-text p {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  @media (max-width: 650px) {
+    .calculator-card {
+      padding: 1.25rem;
+    }
+    .cta-inner-box {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .calc-buttons {
+      flex-direction: column;
+    }
+  }
+</style>
+
+<script>
+  (function initBMICalculator() {
+    const form = document.getElementById('bmi-form') as HTMLFormElement;
+    const resetBtn = document.getElementById('bmi-reset');
+    const resultPanel = document.getElementById('bmi-result-panel');
+    const valueDisplay = document.getElementById('bmi-value-display');
+    const classDisplay = document.getElementById('bmi-class-display');
+    const adviceTitle = document.getElementById('bmi-advice-title');
+    const adviceText = document.getElementById('bmi-advice-text');
+    const indicator = document.getElementById('gauge-marker');
+    const ctaHeadline = document.getElementById('bmi-cta-headline');
+    const ctaSub = document.getElementById('bmi-cta-sub');
+    const ctaLink = document.getElementById('bmi-cta-link') as HTMLAnchorElement;
+
+    if (!form || !resultPanel || !valueDisplay || !classDisplay) return;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const weightInput = document.getElementById('bmi-weight') as HTMLInputElement;
+      const heightInput = document.getElementById('bmi-height') as HTMLInputElement;
+
+      const weight = parseFloat(weightInput.value);
+      const heightCm = parseFloat(heightInput.value);
+
+      if (!weight || !heightCm || weight <= 0 || heightCm <= 0) {
+        alert('Por favor, informe valores válidos para peso e altura.');
+        return;
+      }
+
+      const heightM = heightCm / 100;
+      const bmi = weight / (heightM * heightM);
+      const bmiRounded = bmi.toFixed(1);
+
+      let classification = '';
+      let statusColor = '';
+      let advice = '';
+      let headline = '';
+      let sub = '';
+      let linkHref = '/ferramentas/calculadora-calorias';
+      let linkText = 'Calcular Gasto Calórico';
+      let percent = 50;
+
+      if (bmi < 18.5) {
+        classification = 'Abaixo do peso';
+        statusColor = '#1976d2';
+        advice = 'Seu peso atual está abaixo do recomendado para a sua altura. É importante avaliar se sua ingestão proteico-calórica e micronutrientes estão adequados para preservar sua imunidade e massa muscular.';
+        headline = 'Quer ganhar peso de forma saudável e com massa magra?';
+        sub = 'Veja como atingir um superávit calórico controlado e equilibrado.';
+        percent = Math.max(5, (bmi / 18.5) * 18);
+      } else if (bmi >= 18.5 && bmi < 25) {
+        classification = 'Peso adequado (Normal)';
+        statusColor = '#2e7d32';
+        advice = 'Parabéns! Seu peso está dentro da faixa de menor risco para comorbidades cardiovasculares e metabólicas. Foque na manutenção de uma alimentação rica em comida de verdade e prática regular de atividade física.';
+        headline = 'Quer manter a composição corporal e tonificar?';
+        sub = 'Descubra a quantidade ideal de proteína diária para o seu nível de treino.';
+        linkHref = '/ferramentas/calculadora-proteina';
+        linkText = 'Calcular Proteína Diária';
+        percent = 18.5 + ((bmi - 18.5) / (24.9 - 18.5)) * 25;
+      } else if (bmi >= 25 && bmi < 30) {
+        classification = 'Sobrepeso';
+        statusColor = '#e65100';
+        advice = 'O sobrepeso indica um excesso moderado de massa corporal em relação à altura. Pequenas mudanças consistentes no déficit calórico e aumento de passos diários já trazem expressiva melhora na sensibilidade à insulina.';
+        headline = 'Pronto para iniciar um déficit calórico sustentável?';
+        sub = 'Descubra exatamente quantas calorias consumir por dia sem passar fome.';
+        linkHref = '/ferramentas/calculadora-calorias';
+        linkText = 'Calcular Déficit Calórico Ideal';
+        percent = 43.5 + ((bmi - 25) / 5) * 20;
+      } else if (bmi >= 30 && bmi < 35) {
+        classification = 'Obesidade Grau I';
+        statusColor = '#c62828';
+        advice = 'A obesidade grau I requer atenção preventiva para reduzir a sobrecarga sobre articulações, glicemia e pressão arterial. O emagrecimento gradual de 5% a 10% do peso corporal já gera enormes benefícios clínicos.';
+        headline = 'Planeje seu emagrecimento com base na ciência';
+        sub = 'Calcule sua taxa metabólica basal e estabeleça metas viáveis.';
+        linkHref = '/ferramentas/calculadora-calorias';
+        percent = 63.5 + ((bmi - 30) / 5) * 18.5;
+      } else {
+        classification = 'Obesidade Grau II / III';
+        statusColor = '#b71c1c';
+        advice = 'Recomendamos enfaticamente o acompanhamento conjunto com médico endocrinologista e nutricionista para um plano terapêutico multidisciplinar seguro e individualizado.';
+        headline = 'Cálculo de metas e acompanhamento';
+        sub = 'Entenda seu gasto calórico para alinhar com seu médico ou nutricionista.';
+        linkHref = '/ferramentas/calculadora-calorias';
+        percent = Math.min(98, 82 + ((bmi - 35) / 10) * 16);
+      }
+
+      // Atualiza interface
+      valueDisplay.textContent = bmiRounded;
+      classDisplay.textContent = classification;
+      classDisplay.style.backgroundColor = statusColor + '20';
+      classDisplay.style.color = statusColor;
+
+      if (adviceTitle) adviceTitle.textContent = `Classificação: ${classification}`;
+      if (adviceText) adviceText.textContent = advice;
+      if (indicator) indicator.style.left = `${Math.min(Math.max(percent, 2), 98)}%`;
+
+      if (ctaHeadline) ctaHeadline.textContent = headline;
+      if (ctaSub) ctaSub.textContent = sub;
+      if (ctaLink) {
+        ctaLink.href = linkHref;
+        ctaLink.textContent = linkText;
+      }
+
+      resultPanel.style.display = 'block';
+      resultPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      // Dispara evento GA4
+      if (typeof window !== 'undefined' && 'gtag' in window && typeof window.gtag === 'function') {
+        window.gtag('event', 'tool_used', {
+          tool_name: 'calculadora_imc',
+          bmi_category: classification
+        });
+      }
+    });
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        resultPanel.style.display = 'none';
+      });
+    }
+  })();
+</script>

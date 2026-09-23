@@ -1,0 +1,172 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getCollection } from 'astro:content';
+import { getSlug } from '../../utils/slug';
+
+const tools = await getCollection('tools');
+const sortedTools = tools.sort((a, b) => a.data.order - b.data.order);
+
+const breadcrumbs = [
+  { name: 'Ferramentas Interativas', url: '/ferramentas' }
+];
+---
+
+<BaseLayout
+  title="Calculadoras de Saúde, IMC, Calorias e Proteína"
+  description="Ferramentas online gratuitas baseadas em fórmulas validadas cientificamente para estimar IMC, TMB, Gasto Energético Total (TDEE) e ingestão diária de proteínas."
+>
+  <div class="tools-index-page container">
+    <header class="tools-header">
+      <Breadcrumbs items={breadcrumbs} />
+      <span class="tools-tag">Apoio Clínico & Educacional</span>
+      <h1 class="tools-page-title">Calculadoras de Saúde & Emagrecimento</h1>
+      <p class="tools-page-desc">
+        Planeje sua jornada com precisão matemática. Nossas calculadoras executam fórmulas de padrão-ouro reconhecidas pela comunidade científica (OMS e Mifflin-St Jeor), 100% gratuitas e funcionais em qualquer dispositivo.
+      </p>
+    </header>
+
+    <div class="tools-full-grid">
+      {sortedTools.map((tool) => (
+        <div class="tool-feature-card">
+          <div class="tool-icon-circle">{tool.data.icon}</div>
+          <div class="tool-feature-content">
+            <h2 class="tool-feature-title">{tool.data.title}</h2>
+            <p class="tool-feature-desc">{tool.data.description}</p>
+            <div class="tool-card-cta">
+              <a href={`/ferramentas/${getSlug(tool.id)}`} class="btn btn-primary">
+                Acessar Calculadora &rarr;
+              </a>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Seção Informativa de Segurança -->
+    <div class="tools-note-box">
+      <h3>Transparência e Isenção de Responsabilidade</h3>
+      <p>
+        Todas as nossas ferramentas utilizam processamento local e seguro diretamente no seu navegador — nenhum dado de peso, altura ou idade é transmitido ou armazenado em servidores externos. Os valores fornecidos são modelos matemáticos populacionais de caráter educacional e nunca substituem exames clínicos ou orientação médica direta.
+      </p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .tools-index-page {
+    padding-top: 2.5rem;
+    padding-bottom: 5rem;
+  }
+
+  .tools-header {
+    max-width: 800px;
+    margin-bottom: 3.5rem;
+  }
+
+  .tools-tag {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-primary-light);
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+
+  .tools-page-title {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+  }
+
+  .tools-page-desc {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .tools-full-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .tool-feature-card {
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    transition: border-color var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .tool-feature-card:hover {
+    border-color: var(--color-primary-light);
+    transform: translateY(-2px);
+  }
+
+  .tool-icon-circle {
+    width: 80px;
+    height: 80px;
+    background-color: var(--color-surface-soft);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    flex-shrink: 0;
+  }
+
+  .tool-feature-content {
+    flex-grow: 1;
+  }
+
+  .tool-feature-title {
+    font-size: 1.45rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--color-primary);
+  }
+
+  .tool-feature-desc {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+  }
+
+  .tools-note-box {
+    background-color: var(--color-surface-soft);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 2rem;
+    max-width: 850px;
+    margin: 0 auto;
+  }
+
+  .tools-note-box h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.15rem;
+  }
+
+  .tools-note-box p {
+    font-size: 0.92rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  @media (max-width: 700px) {
+    .tool-feature-card {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1.75rem;
+    }
+  }
+</style>

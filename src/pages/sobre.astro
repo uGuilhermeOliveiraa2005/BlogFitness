@@ -1,0 +1,154 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { getCollection } from 'astro:content';
+import { SITE } from '../utils/constants';
+
+const authors = await getCollection('authors');
+
+const breadcrumbs = [
+  { name: 'Sobre Nós', url: '/sobre' }
+];
+---
+
+<BaseLayout
+  title="Sobre o Projeto Vida & Peso | Compromisso com a Ciência"
+  description="Conheça a missão editorial do Vida & Peso: combate ao sensacionalismo em dietas, promoção da saúde metabólica e respeito aos ritmos biológicos."
+>
+  <div class="institutional-page container-narrow">
+    <header class="page-header">
+      <Breadcrumbs items={breadcrumbs} />
+      <h1 class="page-title">Sobre o Projeto Vida & Peso</h1>
+      <p class="page-lead">
+        Nossa missão é resgatar o bom senso, a clareza e o embasamento científico na discussão sobre emagrecimento, nutrição e bem-estar físico.
+      </p>
+    </header>
+
+    <div class="prose">
+      <h2>O Problema que Queremos Resolver</h2>
+      <p>
+        A internet brasileira está saturada de promessas irrealistas: pílulas milagrosas, métodos rápidos de secar 10kg em uma semana e dietas punitivas que transformam a relação com a comida em sofrimento. O resultado previsível dessa indústria é o efeito sanfona, a frustração crônica e danos ao metabolismo e à saúde psicológica.
+      </p>
+      <p>
+        O <strong>{SITE.name}</strong> nasceu para contrapor essa corrente. Acreditamos que o emagrecimento sustentável é um processo biológico guiado pela física e pela bioquímica — e não por misticismos comerciais.
+      </p>
+
+      <h2>Nossos Pilares Editoriais</h2>
+      <ul>
+        <li><strong>Foco em Evidências:</strong> Todas as nossas orientações apoiam-se em literatura científica com revisão por pares, consensos da OMS, ABESO e sociedades internacionais de nutrição.</li>
+        <li><strong>Sem Terrorismo Nutricional:</strong> Não demonizamos alimentos reais nem vendemos pós milagrosos. Acreditamos na flexibilidade consciente e na adesão a longo prazo.</li>
+        <li><strong>Acessibilidade & Custo Zero:</strong> Todas as nossas ferramentas de cálculo e artigos são de livre acesso a qualquer cidadão.</li>
+        <li><strong>Transparência com o Leitor:</strong> Quando recomendamos um produto, livro ou ferramenta física, sinalizamos claramente o vínculo de afiliação. Nunca recomendamos algo em que nossa equipe editorial não confie tecnicamente.</li>
+      </ul>
+
+      <h2>Equipe de Especialistas e Colaboradores</h2>
+      <p>
+        Nosso conteúdo é produzido e revisado por profissionais formados em suas respectivas áreas de atuação (nutrição e educação física):
+      </p>
+    </div>
+
+    <!-- Lista de Autores / Especialistas -->
+    <div class="authors-list">
+      {authors.map((author) => (
+        <div class="author-profile-box">
+          <img src={author.data.avatar} alt={author.data.name} class="author-photo" />
+          <div class="author-details">
+            <span class="author-credential-tag">{author.data.credentials}</span>
+            <h3 class="author-name">{author.data.name}</h3>
+            <p class="author-role">{author.data.role}</p>
+            <p class="author-bio">{author.data.bio}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="health-disclaimer">
+      <strong>Declaração de Isenção:</strong> As publicações deste site não representam prescrição clínica individual. Cada organismo possui particularidades bioquímicas e histórico único que exigem consulta personalizada com profissionais de saúde.
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .institutional-page {
+    padding-top: 2.5rem;
+    padding-bottom: 5rem;
+  }
+
+  .page-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .page-title {
+    margin-top: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .page-lead {
+    font-size: 1.15rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .authors-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 3rem 0;
+  }
+
+  .author-profile-box {
+    display: flex;
+    gap: 1.75rem;
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1.75rem;
+    align-items: flex-start;
+  }
+
+  .author-photo {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .author-credential-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-primary-light);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .author-name {
+    font-size: 1.35rem;
+    margin: 0 0 0.2rem 0;
+    color: var(--color-primary);
+  }
+
+  .author-role {
+    font-size: 0.88rem;
+    color: var(--color-text-light);
+    margin-bottom: 0.75rem;
+  }
+
+  .author-bio {
+    font-size: 0.92rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  @media (max-width: 600px) {
+    .author-profile-box {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  }
+</style>

@@ -1,0 +1,190 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getCollection } from 'astro:content';
+import { formatDate } from '../../utils/formatDate';
+import { CATEGORIES } from '../../utils/constants';
+import { getSlug } from '../../utils/slug';
+
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const breadcrumbs = [
+  { name: 'Blog', url: '/blog' }
+];
+---
+
+<BaseLayout
+  title="Artigos sobre Emagrecimento, Alimentação & Saúde"
+  description="Explore nosso acervo completo de artigos baseados em evidências científicas sobre déficit calórico, estratégias de saciedade, treinos funcionais e hábitos sustentáveis."
+>
+  <div class="blog-archive-page container">
+    <header class="archive-header">
+      <Breadcrumbs items={breadcrumbs} />
+      <h1 class="archive-title">Biblioteca de Artigos</h1>
+      <p class="archive-desc">
+        Conteúdo confiável, aprofundado e sem promessas milagrosas. Encontre respostas práticas para a sua rotina de saúde.
+      </p>
+
+      <!-- Pílulas de Categoria para Navegação Rápida -->
+      <nav class="category-pills-nav" aria-label="Filtrar por categoria">
+        <a href="/blog" class="category-pill active">Todos ({sortedPosts.length})</a>
+        {Object.entries(CATEGORIES).map(([slug, cat]) => (
+          <a href={`/categoria/${slug}`} class="category-pill">
+            {cat.label}
+          </a>
+        ))}
+      </nav>
+    </header>
+
+    <div class="posts-archive-grid">
+      {sortedPosts.map((post) => (
+        <article class="post-card">
+          <a href={`/blog/${getSlug(post.id)}`} class="post-card-thumb">
+            <img 
+              src={post.data.heroImage} 
+              alt={post.data.heroImageAlt || post.data.title} 
+              class="thumb-img"
+              loading="lazy" 
+            />
+          </a>
+          <div class="post-card-content">
+            <a href={`/categoria/${post.data.category}`} class="category-badge">
+              {CATEGORIES[post.data.category]?.label || post.data.category}
+            </a>
+            <h2 class="post-card-title">
+              <a href={`/blog/${getSlug(post.id)}`}>{post.data.title}</a>
+            </h2>
+            <p class="post-card-desc">{post.data.description}</p>
+            <div class="card-meta">
+              <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+              <span>· ~{post.data.readingTime} min</span>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .blog-archive-page {
+    padding-top: 2.5rem;
+    padding-bottom: 5rem;
+  }
+
+  .archive-header {
+    max-width: 800px;
+    margin-bottom: 3rem;
+  }
+
+  .archive-title {
+    margin-top: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .archive-desc {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .category-pills-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .category-pill {
+    padding: 0.4rem 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+
+  .category-pill:hover {
+    border-color: var(--color-primary-light);
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .category-pill.active {
+    background-color: var(--color-primary);
+    color: #ffffff;
+    border-color: var(--color-primary);
+  }
+
+  .posts-archive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+
+  .post-card {
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .post-card-thumb {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background-color: var(--color-surface-soft);
+  }
+
+  .thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-normal);
+  }
+
+  .post-card:hover .thumb-img {
+    transform: scale(1.03);
+  }
+
+  .post-card-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .post-card-title {
+    font-size: 1.25rem;
+    margin: 0.6rem 0;
+    line-height: 1.35;
+  }
+
+  .post-card-title a {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .post-card-title a:hover {
+    text-decoration: underline;
+  }
+
+  .post-card-desc {
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+    flex-grow: 1;
+  }
+
+  .card-meta {
+    font-size: 0.8rem;
+    color: var(--color-text-light);
+  }
+</style>

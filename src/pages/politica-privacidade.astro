@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { SITE } from '../utils/constants';
+
+const breadcrumbs = [
+  { name: 'Política de Privacidade', url: '/politica-privacidade' }
+];
+---
+
+<BaseLayout
+  title="Política de Privacidade & Proteção de Dados (LGPD)"
+  description="Conheça nossa política de privacidade, saiba como usamos cookies com o Google Consent Mode v2, Google AdSense, GA4 e seus direitos sob a LGPD."
+>
+  <div class="institutional-page container-narrow">
+    <header class="page-header">
+      <Breadcrumbs items={breadcrumbs} />
+      <h1 class="page-title">Política de Privacidade & Cookies</h1>
+      <p class="page-lead">
+        Esta política descreve de forma transparente como o portal <strong>{SITE.name}</strong> coleta, utiliza, armazena e protege suas informações, em total conformidade com a Lei Geral de Proteção de Dados Pessoais (LGPD - Lei nº 13.709/2018) e com as diretrizes de consentimento do Google.
+      </p>
+    </header>
+
+    <div class="prose">
+      <p><em>Última atualização: 15 de janeiro de 2025.</em></p>
+
+      <h2>1. Princípio da Minimização de Dados</h2>
+      <p>
+        O <strong>{SITE.name}</strong> opera sob uma arquitetura puramente estática (SSG). Não exigimos criação de conta, login com senhas ou fornecimento compulsório de dados pessoais para navegação nos artigos ou utilização das nossas ferramentas de cálculo (IMC, calorias e proteína). Os dados inseridos nas calculadoras são processados exclusivamente na memória temporária do seu navegador (client-side) e não são enviados a nenhum servidor.
+      </p>
+
+      <h2>2. Coleta de Dados e Finalidades</h2>
+      <p>Podemos coletar dados em duas situações específicas:</p>
+      <ul>
+        <li><strong>Navegação e Métricas Agregadas:</strong> Informações técnicas anônimas sobre dispositivo, navegador, resolução de tela, páginas visitadas e tempo de permanência, coletadas via Google Analytics 4 para aprimoramento da performance do site.</li>
+        <li><strong>Formulário de Contato Voluntário:</strong> Quando você nos envia voluntariamente uma mensagem através da página de contato, seu nome, e-mail e teor da mensagem são utilizados apenas para responder à sua solicitação.</li>
+      </ul>
+
+      <h2>3. Uso de Cookies e Google Consent Mode v2</h2>
+      <p>
+        Cookies são pequenos arquivos de texto armazenados no seu dispositivo para memorizar preferências. Implementamos o padrão <strong>Google Consent Mode v2</strong>: nenhum cookie analítico ou publicitário é ativado antes de você manifestar seu consentimento explícito no banner de privacidade.
+      </p>
+      <p>Categorias de cookies utilizadas:</p>
+      <ul>
+        <li><strong>Cookies Necessários:</strong> Essenciais para o funcionamento básico e segurança (ex.: registro de preferência no próprio banner de consentimento).</li>
+        <li><strong>Cookies de Desempenho e Métricas (GA4):</strong> Ajudam a entender como o público interage com os artigos, com anonimização de endereço IP ativada.</li>
+        <li><strong>Cookies de Publicidade (Google AdSense):</strong> O Google e seus parceiros utilizam cookies para veicular anúncios com base nas visitas anteriores dos usuários a este ou outros sites.</li>
+      </ul>
+
+      <h2>4. Publicidade do Google (AdSense)</h2>
+      <p>
+        Este site exibe anúncios fornecidos pelo Google AdSense. O Google pode usar cookies como o cookie DoubleClick para exibir anúncios com base em visitas anteriores. Os usuários podem desativar a publicidade personalizada acessando as <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">Configurações de Anúncios do Google</a> ou através do portal da <a href="https://www.aboutads.info" target="_blank" rel="noopener noreferrer">AboutAds.info</a>.
+      </p>
+
+      <h2>5. Links de Afiliados e Sites de Terceiros</h2>
+      <p>
+        Nosso conteúdo pode conter links para lojas parceiras (como a Amazon Brasil e outras plataformas reconhecidas). Ao clicar em um link patrocinado e efetuar uma compra, o comerciante parceiro registra a origem da referência. Não compartilhamos nenhum dado pessoal seu com esses parceiros. Recomendamos que você leia a política de privacidade específica de cada loja ao ser redirecionado.
+      </p>
+
+      <h2>6. Direitos do Titular sob a LGPD</h2>
+      <p>Nos termos do artigo 18 da LGPD, você possui o direito de solicitar a qualquer momento:</p>
+      <ul>
+        <li>Confirmação da existência de tratamento de dados;</li>
+        <li>Acesso facilitado aos seus dados armazenados;</li>
+        <li>Correção de dados incompletos, inexatos ou desatualizados;</li>
+        <li>Anonimização, bloqueio ou eliminação de dados desnecessários;</li>
+        <li>Revogação imediata do consentimento previamente concedido.</li>
+      </ul>
+
+      <h2>7. Segurança da Informação</h2>
+      <p>
+        Todo o tráfego do nosso site é criptografado ponta a ponta com certificados SSL/TLS modernos, com protocolo HTTPS forçado, proteção contra ataques distribuídos (DDoS) e cabeçalhos de segurança avançados fornecidos pela infraestrutura da <strong>Cloudflare</strong>.
+      </p>
+
+      <h2>8. Como Entrar em Contato</h2>
+      <p>
+        Para qualquer esclarecimento, alteração de consentimento ou solicitação relativa aos seus dados pessoais, entre em contato através de nossa página de <a href="/contato">Contato</a> ou envie um e-mail para <code>privacidade@vidae-peso.com.br</code>.
+      </p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .institutional-page {
+    padding-top: 2.5rem;
+    padding-bottom: 5rem;
+  }
+
+  .page-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .page-title {
+    margin-top: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .page-lead {
+    font-size: 1.15rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+</style>

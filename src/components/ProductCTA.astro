@@ -1,0 +1,197 @@
+---
+interface Props {
+  nome: string;
+  url: string;
+  imagem?: string;
+  descricaoCurta: string;
+  botaoTexto?: string;
+  badge?: string;
+  origemArtigo?: string;
+}
+
+const {
+  nome,
+  url,
+  imagem,
+  descricaoCurta,
+  botaoTexto = 'Verificar Preço Oficial',
+  badge = 'Recomendação Editorial',
+  origemArtigo = 'artigo'
+} = Astro.props;
+---
+
+<div class="product-cta-card">
+  {badge && <span class="cta-badge">{badge}</span>}
+  
+  <div class="cta-inner">
+    {imagem && (
+      <div class="cta-image-col">
+        <img src={imagem} alt={nome} class="cta-image" loading="lazy" />
+      </div>
+    )}
+    
+    <div class="cta-content-col">
+      <h3 class="cta-product-title">{nome}</h3>
+      <p class="cta-product-desc">{descricaoCurta}</p>
+      
+      <div class="cta-actions">
+        <a 
+          href={url} 
+          target="_blank" 
+          rel="sponsored noopener noreferrer" 
+          class="btn btn-primary cta-btn js-affiliate-link"
+          data-product-name={nome}
+          data-article-source={origemArtigo}
+        >
+          <span>{botaoTexto}</span>
+          <svg class="cta-arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-disclaimer">
+    <small>Transparência: Compras efetuadas através deste link patrocinado geram uma pequena comissão para a manutenção do nosso portal independente, sem nenhum custo extra para você.</small>
+  </div>
+</div>
+
+<style>
+  .product-cta-card {
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-top: 3px solid var(--color-accent);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin: 2.5rem 0;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  }
+
+  .cta-badge {
+    position: absolute;
+    top: -12px;
+    right: 1.5rem;
+    background-color: var(--color-accent);
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .cta-inner {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .cta-image-col {
+    flex-shrink: 0;
+    width: 110px;
+    height: 110px;
+    background: var(--color-surface-soft);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .cta-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .cta-content-col {
+    flex-grow: 1;
+  }
+
+  .cta-product-title {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    margin-top: 0;
+    margin-bottom: 0.4rem;
+    color: var(--color-primary);
+  }
+
+  .cta-product-desc {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .cta-actions {
+    display: flex;
+    align-items: center;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .cta-arrow-icon {
+    transition: transform var(--transition-fast);
+  }
+
+  .cta-btn:hover .cta-arrow-icon {
+    transform: translateX(4px);
+  }
+
+  .cta-disclaimer {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border-subtle);
+    color: var(--color-text-light);
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 600px) {
+    .cta-inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .cta-image-col {
+      width: 100%;
+      height: 160px;
+    }
+    .cta-btn {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  // Rastreamento GA4 de cliques em links de afiliados
+  declare global {
+    interface Window {
+      gtag?: (command: string, action: string, params?: Record<string, unknown>) => void;
+    }
+  }
+
+  const affiliateLinks = document.querySelectorAll('.js-affiliate-link');
+  affiliateLinks.forEach((link) => {
+    link.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLElement;
+      const productName = target.getAttribute('data-product-name') || 'unknown';
+      const articleSource = target.getAttribute('data-article-source') || 'general';
+
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'affiliate_click', {
+          product_name: productName,
+          source_page: articleSource,
+          link_url: (target as HTMLAnchorElement).href
+        });
+      }
+    });
+  });
+</script>

@@ -1,0 +1,183 @@
+---
+import { SITE, CATEGORIES } from '../utils/constants';
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-content">
+    <div class="footer-grid">
+      <!-- Coluna 1: Marca & Missão -->
+      <div class="footer-col brand-col">
+        <a href="/" class="footer-logo">
+          <span class="logo-mark">◈</span>
+          <span>{SITE.name}</span>
+        </a>
+        <p class="footer-desc">
+          Conteúdo sério, prático e baseado em evidências científicas para ajudar você a alcançar e manter o peso ideal com saúde, prazer e longevidade.
+        </p>
+      </div>
+
+      <!-- Coluna 2: Categorias -->
+      <div class="footer-col">
+        <h4 class="footer-heading">Categorias</h4>
+        <ul class="footer-links">
+          {Object.entries(CATEGORIES).map(([slug, data]) => (
+            <li>
+              <a href={`/categoria/${slug}`}>{data.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Coluna 3: Ferramentas Interativas -->
+      <div class="footer-col">
+        <h4 class="footer-heading">Ferramentas</h4>
+        <ul class="footer-links">
+          <li><a href="/ferramentas/calculadora-imc">Calculadora de IMC</a></li>
+          <li><a href="/ferramentas/calculadora-calorias">Calculadora de Calorias (TDEE)</a></li>
+          <li><a href="/ferramentas/calculadora-proteina">Calculadora de Proteína Diária</a></li>
+        </ul>
+      </div>
+
+      <!-- Coluna 4: Institucional & Legal -->
+      <div class="footer-col">
+        <h4 class="footer-heading">Institucional</h4>
+        <ul class="footer-links">
+          <li><a href="/sobre">Sobre o Projeto</a></li>
+          <li><a href="/contato">Fale Conosco</a></li>
+          <li><a href="/politica-privacidade">Política de Privacidade</a></li>
+          <li><a href="/termos-de-uso">Termos de Uso</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Aviso Médico YMYL (Essencial para E-E-A-T do Google) -->
+    <div class="footer-disclaimer">
+      <p>
+        <strong>Aviso de Isenção Médica:</strong> As informações publicadas neste blog têm caráter puramente informativo e educacional. Elas não substituem a consulta, o diagnóstico ou o acompanhamento individualizado de médicos, nutricionistas ou educadores físicos. Antes de iniciar qualquer dieta, protocolo de restrição calórica ou programa de exercícios de alta intensidade, consulte sempre um profissional de saúde habilitado.
+      </p>
+    </div>
+
+    <!-- Linha Final de Copyright -->
+    <div class="footer-bottom">
+      <p>&copy; {currentYear} {SITE.name}. Todos os direitos reservados.</p>
+      <p class="transparency-note">
+        Divulgação de afiliados: Este site pode receber comissões por compras realizadas através de links indicados em nossas análises, sem qualquer custo adicional para o leitor.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background-color: #121815;
+    color: #cdd5d0;
+    margin-top: auto;
+    padding-top: 3.5rem;
+    padding-bottom: 2rem;
+    border-top: 1px solid #232c27;
+    font-size: 0.9rem;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-decoration: none;
+    margin-bottom: 0.75rem;
+  }
+
+  .logo-mark {
+    color: #52b788;
+  }
+
+  .footer-desc {
+    color: #9aa59f;
+    line-height: 1.6;
+    font-size: 0.88rem;
+    max-width: 320px;
+  }
+
+  .footer-heading {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .footer-links a {
+    color: #aeb9b2;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .footer-links a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+  }
+
+  .footer-disclaimer {
+    border-top: 1px solid #232c27;
+    border-bottom: 1px solid #232c27;
+    padding: 1.5rem 0;
+    margin-bottom: 2rem;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: #8c9690;
+  }
+
+  .footer-disclaimer strong {
+    color: #b8c4bd;
+  }
+
+  .footer-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    color: #7a847e;
+  }
+
+  .transparency-note {
+    font-size: 0.75rem;
+    color: #6a746e;
+  }
+
+  @media (max-width: 900px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    .brand-col {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 540px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

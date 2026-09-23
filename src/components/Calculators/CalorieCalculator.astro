@@ -1,0 +1,559 @@
+---
+// Calculadora de Calorias (TDEE / Gasto Energético Total) - Fórmula Mifflin-St Jeor
+---
+
+<div class="calculator-card" id="calorie-calculator">
+  <div class="calculator-header">
+    <div class="calc-badge">Fórmula Padrão-Ouro Mifflin-St Jeor</div>
+    <h2 class="calc-title">Calculadora de Calorias Diárias & Déficit Seguro</h2>
+    <p class="calc-subtitle">
+      Descubra sua Taxa Metabólica Basal (TMB), seu gasto diário total (TDEE) e as calorias exatas para emagrecer sem passar fome ou estagnar o metabolismo.
+    </p>
+  </div>
+
+  <form id="calorie-form" class="calc-form" novalidate>
+    <!-- Sexo Biológico (crucial para fórmula metabólica) -->
+    <div class="form-group sex-group">
+      <label class="form-label">Sexo Biológico</label>
+      <div class="radio-toggle-group">
+        <label class="radio-label">
+          <input type="radio" name="sex" value="female" checked class="radio-input" />
+          <span class="radio-btn-text">Feminino</span>
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="sex" value="male" class="radio-input" />
+          <span class="radio-btn-text">Masculino</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="calc-grid">
+      <div class="form-group">
+        <label for="cal-age" class="form-label">Idade (anos)</label>
+        <div class="input-wrapper">
+          <input 
+            type="number" 
+            id="cal-age" 
+            name="age" 
+            min="15" 
+            max="100" 
+            step="1" 
+            placeholder="Ex: 32" 
+            required 
+            class="form-input" 
+          />
+          <span class="input-unit">anos</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="cal-weight" class="form-label">Peso Corporal (kg)</label>
+        <div class="input-wrapper">
+          <input 
+            type="number" 
+            id="cal-weight" 
+            name="weight" 
+            min="30" 
+            max="250" 
+            step="0.1" 
+            placeholder="Ex: 70" 
+            required 
+            class="form-input" 
+          />
+          <span class="input-unit">kg</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="cal-height" class="form-label">Altura (cm)</label>
+        <div class="input-wrapper">
+          <input 
+            type="number" 
+            id="cal-height" 
+            name="height" 
+            min="100" 
+            max="230" 
+            step="1" 
+            placeholder="Ex: 168" 
+            required 
+            class="form-input" 
+          />
+          <span class="input-unit">cm</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nível de Atividade Física -->
+    <div class="form-group activity-group">
+      <label for="cal-activity" class="form-label">Nível de Atividade Física Diária</label>
+      <select id="cal-activity" name="activity" class="form-select" required>
+        <option value="1.2">Sedentário (trabalho em escritório, pouco ou nenhum exercício planejado)</option>
+        <option value="1.375" selected>Levemente ativo (exercício leve ou caminhadas 1 a 3 dias por semana)</option>
+        <option value="1.55">Moderadamente ativo (treino estruturado de musculação ou aeróbico 3 a 5 dias)</option>
+        <option value="1.725">Muito ativo (treino intenso ou esportes 6 a 7 dias por semana)</option>
+        <option value="1.9">Extremamente ativo (atleta profissional ou trabalho braçal pesado + treino diário)</option>
+      </select>
+    </div>
+
+    <div class="calc-buttons">
+      <button type="submit" class="btn btn-primary btn-calc">Calcular Metas Calóricas</button>
+      <button type="reset" id="cal-reset" class="btn btn-secondary btn-reset">Limpar</button>
+    </div>
+  </form>
+
+  <!-- Painel de Resultados -->
+  <div id="cal-result-panel" class="result-panel" style="display: none;" aria-live="polite">
+    <div class="calorie-cards-grid">
+      <!-- Card TMB -->
+      <div class="cal-stat-card">
+        <span class="stat-badge">Metabolismo Basal (TMB)</span>
+        <span id="cal-bmr-val" class="stat-number">--</span>
+        <span class="stat-unit">kcal / dia</span>
+        <p class="stat-desc">O que seu corpo queima em repouso absoluto apenas para manter órgãos e funções vitais.</p>
+      </div>
+
+      <!-- Card TDEE -->
+      <div class="cal-stat-card highlight-card">
+        <span class="stat-badge">Gasto Total Diário (TDEE)</span>
+        <span id="cal-tdee-val" class="stat-number">--</span>
+        <span class="stat-unit">kcal / dia</span>
+        <p class="stat-desc">Quantidade necessária para manter seu peso exatamente como está hoje.</p>
+      </div>
+
+      <!-- Card Déficit Seguro -->
+      <div class="cal-stat-card target-card">
+        <span class="stat-badge stat-badge-target">Meta para Emagrecer (Déficit ~20%)</span>
+        <span id="cal-deficit-val" class="stat-number">--</span>
+        <span class="stat-unit">kcal / dia</span>
+        <p class="stat-desc">Faixa calórica ideal para queima contínua de gordura com preservação máxima de massa magra.</p>
+      </div>
+    </div>
+
+    <div class="targets-breakdown">
+      <h3 class="breakdown-title">Opções de Estratégia Calórica</h3>
+      <div class="options-table-wrapper">
+        <table class="options-table">
+          <thead>
+            <tr>
+              <th>Objetivo</th>
+              <th>Calorias Recomendadas</th>
+              <th>Ritmo Esperado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Déficit Suave (-15%)</strong></td>
+              <td id="row-mild-deficit">-- kcal</td>
+              <td>Emagrecimento suave (~0,3kg/sem), ideal para quem tem pouca gordura a perder.</td>
+            </tr>
+            <tr class="table-row-recommended">
+              <td><strong>Déficit Moderado (-20%) ★</strong></td>
+              <td id="row-standard-deficit">-- kcal</td>
+              <td>Padrão recomendado pela literatura (~0,5kg/sem) com alta adesão e saciedade.</td>
+            </tr>
+            <tr>
+              <td><strong>Manutenção de Peso (0%)</strong></td>
+              <td id="row-maintenance">-- kcal</td>
+              <td>Estabilização e consolidação após atingir o peso almejado.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Alerta de Segurança se calorias ficarem muito baixas -->
+    <div id="cal-safety-alert" class="safety-warning" style="display: none;">
+      <strong>Aviso de Segurança Metabólica:</strong> Para preservar sua tireoide e imunidade, nunca recomendamos dietas com restrição calórica severa inferior a 1.200 kcal (para mulheres) ou 1.500 kcal (para homens) sem acompanhamento médico estrito.
+    </div>
+
+    <!-- Próximo Passo: Proteína -->
+    <div class="next-step-box">
+      <div>
+        <strong>Próximo passo fundamental:</strong>
+        <p>Ao reduzir calorias, você precisa ingerir proteína suficiente para não queimar massa muscular.</p>
+      </div>
+      <a href="/ferramentas/calculadora-proteina" class="btn btn-secondary btn-sm">
+        Calcular Proteína Recomendada &rarr;
+      </a>
+    </div>
+  </div>
+
+  <div class="health-disclaimer">
+    <strong>Aviso Médico & Nutricional:</strong> Os cálculos de TDEE e TMB são estimativas baseadas na equação científica de Mifflin-St Jeor. Fatores como percentual exato de gordura, histórico de dietas restritivas, medicações e alterações na tireoide podem modular o gasto energético real.
+  </div>
+</div>
+
+<style>
+  .calculator-card {
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    margin: 2rem 0;
+  }
+
+  .calc-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-primary);
+    background-color: var(--color-primary-soft);
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.5rem;
+  }
+
+  .calc-title {
+    font-size: 1.6rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--color-primary);
+  }
+
+  .calc-subtitle {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .sex-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .radio-toggle-group {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.4rem;
+  }
+
+  .radio-label {
+    position: relative;
+    cursor: pointer;
+    flex: 1;
+  }
+
+  .radio-input {
+    position: absolute;
+    opacity: 0;
+  }
+
+  .radio-btn-text {
+    display: block;
+    text-align: center;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.95rem;
+    background-color: #fafbf9;
+    color: var(--color-text-muted);
+    transition: all var(--transition-fast);
+  }
+
+  .radio-input:checked + .radio-btn-text {
+    background-color: var(--color-primary-soft);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  .calc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .form-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+  }
+
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .form-input, .form-select {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    background-color: #fafbf9;
+    color: var(--color-text-main);
+    transition: border-color var(--transition-fast);
+  }
+
+  .form-input {
+    padding-right: 2.5rem;
+  }
+
+  .form-input:focus, .form-select:focus {
+    outline: none;
+    border-color: var(--color-primary-light);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.15);
+  }
+
+  .input-unit {
+    position: absolute;
+    right: 0.9rem;
+    font-size: 0.85rem;
+    color: var(--color-text-light);
+    pointer-events: none;
+    font-weight: 500;
+  }
+
+  .activity-group {
+    margin-bottom: 1.75rem;
+  }
+
+  .calc-buttons {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .btn-calc {
+    flex: 2;
+  }
+
+  .btn-reset {
+    flex: 1;
+  }
+
+  /* Resultados */
+  .result-panel {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .calorie-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .cal-stat-card {
+    background: var(--color-surface-soft);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .target-card {
+    background: #edf7f0;
+    border-color: #a3d9b4;
+  }
+
+  .stat-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-badge-target {
+    color: var(--color-primary);
+  }
+
+  .stat-number {
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--color-primary);
+  }
+
+  .stat-unit {
+    font-size: 0.85rem;
+    color: var(--color-text-light);
+    margin-bottom: 0.75rem;
+  }
+
+  .stat-desc {
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  .breakdown-title {
+    font-size: 1.15rem;
+    margin-bottom: 0.75rem;
+    color: var(--color-primary);
+  }
+
+  .options-table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+  }
+
+  .options-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    text-align: left;
+  }
+
+  .options-table th, .options-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .options-table th {
+    background-color: var(--color-surface-soft);
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  .table-row-recommended {
+    background-color: #f1f8f3;
+    font-weight: 500;
+  }
+
+  .safety-warning {
+    background-color: #fef3c7;
+    border-left: 4px solid #d97706;
+    padding: 0.9rem 1.25rem;
+    font-size: 0.88rem;
+    color: #92400e;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .next-step-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    background-color: var(--color-surface-soft);
+    border: 1px solid var(--color-border);
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+  }
+
+  .next-step-box strong {
+    color: var(--color-primary);
+    font-size: 0.95rem;
+  }
+
+  .next-step-box p {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin: 0.2rem 0 0 0;
+  }
+
+  @media (max-width: 650px) {
+    .calculator-card {
+      padding: 1.25rem;
+    }
+    .next-step-box {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .calc-buttons {
+      flex-direction: column;
+    }
+  }
+</style>
+
+<script>
+  (function initCalorieCalculator() {
+    const form = document.getElementById('calorie-form') as HTMLFormElement;
+    const resetBtn = document.getElementById('cal-reset');
+    const resultPanel = document.getElementById('cal-result-panel');
+    const bmrVal = document.getElementById('cal-bmr-val');
+    const tdeeVal = document.getElementById('cal-tdee-val');
+    const deficitVal = document.getElementById('cal-deficit-val');
+    const rowMild = document.getElementById('row-mild-deficit');
+    const rowStd = document.getElementById('row-standard-deficit');
+    const rowMaint = document.getElementById('row-maintenance');
+    const safetyAlert = document.getElementById('cal-safety-alert');
+
+    if (!form || !resultPanel) return;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const sexInput = form.querySelector('input[name="sex"]:checked') as HTMLInputElement;
+      const sex = sexInput ? sexInput.value : 'female';
+      const age = parseInt((document.getElementById('cal-age') as HTMLInputElement).value, 10);
+      const weight = parseFloat((document.getElementById('cal-weight') as HTMLInputElement).value);
+      const height = parseFloat((document.getElementById('cal-height') as HTMLInputElement).value);
+      const activity = parseFloat((document.getElementById('cal-activity') as HTMLSelectElement).value);
+
+      if (!age || !weight || !height || age <= 0 || weight <= 0 || height <= 0) {
+        alert('Por favor, preencha todos os campos com valores válidos.');
+        return;
+      }
+
+      // Fórmula Mifflin-St Jeor
+      // Homens: 10 * peso + 6.25 * altura - 5 * idade + 5
+      // Mulheres: 10 * peso + 6.25 * altura - 5 * idade - 161
+      let bmr = 10 * weight + 6.25 * height - 5 * age;
+      if (sex === 'male') {
+        bmr += 5;
+      } else {
+        bmr -= 161;
+      }
+
+      const tdee = bmr * activity;
+      const mildDeficit = Math.round(tdee * 0.85); // 15% deficit
+      const standardDeficit = Math.round(tdee * 0.80); // 20% deficit
+
+      if (bmrVal) bmrVal.textContent = Math.round(bmr).toLocaleString('pt-BR');
+      if (tdeeVal) tdeeVal.textContent = Math.round(tdee).toLocaleString('pt-BR');
+      if (deficitVal) deficitVal.textContent = standardDeficit.toLocaleString('pt-BR');
+
+      if (rowMild) rowMild.textContent = `${mildDeficit.toLocaleString('pt-BR')} kcal`;
+      if (rowStd) rowStd.textContent = `${standardDeficit.toLocaleString('pt-BR')} kcal`;
+      if (rowMaint) rowMaint.textContent = `${Math.round(tdee).toLocaleString('pt-BR')} kcal`;
+
+      // Alerta de segurança se déficit estiver muito baixo
+      const minSafe = sex === 'male' ? 1500 : 1200;
+      if (safetyAlert) {
+        if (standardDeficit < minSafe) {
+          safetyAlert.style.display = 'block';
+        } else {
+          safetyAlert.style.display = 'none';
+        }
+      }
+
+      resultPanel.style.display = 'block';
+      resultPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      // Dispara evento GA4
+      if (typeof window !== 'undefined' && 'gtag' in window && typeof window.gtag === 'function') {
+        window.gtag('event', 'tool_used', {
+          tool_name: 'calculadora_calorias',
+          goal: 'deficit_calorico'
+        });
+      }
+    });
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        resultPanel.style.display = 'none';
+      });
+    }
+  })();
+</script>

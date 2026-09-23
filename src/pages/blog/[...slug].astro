@@ -1,0 +1,45 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import PostLayout from '../../layouts/PostLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => {
+    // Normalizar slug pegando o nome do arquivo limpo
+    const cleanSlug = post.id.split('/').pop()?.replace(/\.[^/.]+$/, '') || post.id;
+    return {
+      params: { slug: cleanSlug },
+      props: { post, cleanSlug }
+    };
+  });
+}
+
+const { post, cleanSlug } = Astro.props;
+const { Content, headings } = await render(post);
+
+// Buscar dados do autor
+let authorData;
+if (post.data.author) {
+  const authorEntry = await getEntry('authors', post.data.author);
+  if (authorEntry) {
+    authorData = authorEntry.data;
+  }
+}
+
+// Buscar posts relacionados na mesma categoria
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+const relatedPosts = allPosts
+  .filter(p => p.id !== post.id && p.data.category === post.data.category)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+
+<PostLayout 
+  post={post}
+  slug={cleanSlug}
+  authorData={authorData} 
+  headings={headings} 
+  relatedPosts={relatedPosts}
+>
+  <Content />
+</PostLayout>
