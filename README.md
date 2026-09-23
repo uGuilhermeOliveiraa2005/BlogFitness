@@ -126,7 +126,7 @@ BlogFitness/
    - **Build output directory:** `dist`
 4. Em **Environment variables (Variáveis de ambiente)**, adicione:
    - `NODE_VERSION`: `20` (ou superior)
-   - `SITE_URL`: `https://seu-subdominio.pages.dev` (ou seu domínio próprio)
+   - `SITE_URL`: `https://blogfitness.gmattos511.workers.dev`
 5. Clique em **Save and Deploy**. A Cloudflare gerará o deploy em menos de 1 minuto.
 
 ### Passo 3: Configurar o Decap CMS com GitHub OAuth

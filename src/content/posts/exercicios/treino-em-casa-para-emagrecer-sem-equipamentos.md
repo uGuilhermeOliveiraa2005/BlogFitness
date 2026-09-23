@@ -19,7 +19,7 @@ affiliateProducts:
     botaoTexto: "Ver Oferta na Amazon"
 draft: false
 seo:
-  canonicalUrl: "https://blogfitness.pages.dev/blog/treino-em-casa-para-emagrecer-sem-equipamentos"
+  canonicalUrl: "https://blogfitness.gmattos511.workers.dev/blog/treino-em-casa-para-emagrecer-sem-equipamentos"
   noindex: false
 ---
 

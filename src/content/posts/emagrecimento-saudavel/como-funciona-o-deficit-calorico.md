@@ -24,7 +24,7 @@ affiliateProducts:
     botaoTexto: "Ver Preço Oficial"
 draft: false
 seo:
-  canonicalUrl: "https://blogfitness.pages.dev/blog/como-funciona-o-deficit-calorico"
+  canonicalUrl: "https://blogfitness.gmattos511.workers.dev/blog/como-funciona-o-deficit-calorico"
   noindex: false
 ---
 

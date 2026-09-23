@@ -2,7 +2,7 @@ backend:
   name: github
   repo: uGuilhermeOliveiraa2005/BlogFitness
   branch: main
-  base_url: https://blogfitness.pages.dev # Ou backend de autenticação OAuth gratuito
+  base_url: https://blogfitness.gmattos511.workers.dev # Ou backend de autenticação OAuth gratuito
   auth_endpoint: auth
 
 media_folder: public/images/uploads

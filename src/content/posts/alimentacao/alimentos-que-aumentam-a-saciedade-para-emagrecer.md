@@ -19,7 +19,7 @@ affiliateProducts:
     botaoTexto: "Ver Menor Preço na Amazon"
 draft: false
 seo:
-  canonicalUrl: "https://blogfitness.pages.dev/blog/alimentos-que-aumentam-a-saciedade-para-emagrecer"
+  canonicalUrl: "https://blogfitness.gmattos511.workers.dev/blog/alimentos-que-aumentam-a-saciedade-para-emagrecer"
   noindex: false
 ---
 

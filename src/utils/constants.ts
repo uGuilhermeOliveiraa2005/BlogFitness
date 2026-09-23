@@ -2,7 +2,7 @@ export const SITE = {
   name: 'Vida & Peso',
   title: 'Vida & Peso | Emagrecimento Saudável, Nutrição e Hábitos Sustentáveis',
   description: 'Guia definitivo e baseado em ciência para emagrecimento consciente, déficit calórico seguro, alimentação nutritiva e exercícios práticos.',
-  url: 'https://blogfitness.pages.dev',
+  url: 'https://blogfitness.gmattos511.workers.dev',
   defaultImage: '/images/og-default.jpg',
   author: 'Equipe Editorial Vida & Peso',
   locale: 'pt-BR',
