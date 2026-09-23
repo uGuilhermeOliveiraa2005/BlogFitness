@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: seu-usuario/BlogFitness # Substitua pelo seu usuário/repositório no GitHub
+  repo: uGuilhermeOliveiraa2005/BlogFitness
   branch: main
   base_url: https://blogfitness.pages.dev # Ou backend de autenticação OAuth gratuito
   auth_endpoint: auth
